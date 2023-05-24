@@ -20,33 +20,31 @@ export default class CharactersServices {
         const {Id, Image, Name, Age, Weight, History} = character;
         let pool = await sql.connect(config);
 
-        try{
             const request = new sql.Request(pool);
 
             returnEntity = request
-            .input('Image', sql.NVarChar(MAX), Image)
+            .input('Image', sql.NVarChar(4000), Image)
             .input('Name', sql.NVarChar(50), Name)
             .input('Age', sql.Int, Age)
             .input('Weight', sql.Float, Weight)
-            .input('History', sql.NVarChar(MAX), History)
+            .input('History', sql.NVarChar(4000), History)
             .query('INSERT INTO Characters (Image, Name, Age, Weight, History) VALUES (@Image, @Name, @Age, @Weight, @History)')
-        }catch (error) {
-            console.log(error);
-        }
         return returnEntity;
     }
     static update = async(character) => {
         let returnEntity = null;
         const {Id, Image, Name, Age, Weight, History} = character;
+        let pool = await sql.connect(config);
         try{
             const request = new sql.Request(pool);
 
             returnEntity = request
-            .input('Image', sql.NVarChar(MAX), Image)
+            .input('Id', sql.Int, Id)
+            .input('Image', sql.NVarChar(4000), Image)
             .input('Name', sql.NVarChar(50), Name)
             .input('Age', sql.Int, Age)
             .input('Weight', sql.Float, Weight)
-            .input('History', sql.NVarChar(MAX), History)
+            .input('History', sql.NVarChar(4000), History)
                 .query('UPDATE Characters SET Image = @Image, Name = @Name, Age = @Age, Weight = @Weight, History = @History WHERE Id = @Id');
         }catch (error) {
             console.log(error);
@@ -78,7 +76,7 @@ export default class CharactersServices {
         }
         return returnEntity;
     }
-    static getCharInfo = async(Name) => {
+    static getCharByName = async(Name) => {
         let returnEntity = null;
         try{
             let pool = await sql.connect(config);

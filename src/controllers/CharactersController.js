@@ -10,7 +10,8 @@ router.get('', async(req, res) => {
 
 router.post('', async(req, res) => {
     try {
-        await CharServices.insert(req.body)
+        let r = await CharServices.insert(req.body)
+        console.log(r)
         res.status(200).json({message: 'character inserted'});
     } catch (error) {
         console.error(error);
@@ -44,7 +45,7 @@ router.get('/:id', async(req, res) => {
     return res.status(200).json(r);
 });
 
-router.get('?name', async(req, res) => {
+router.get('', async(req, res) => {
     const r = await CharServices.getCharByName(req.query.name)
     console.log(res);
     return res.status(200).json(r);
