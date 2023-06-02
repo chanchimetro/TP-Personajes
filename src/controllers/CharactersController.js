@@ -39,16 +39,25 @@ router.delete('/:id', async(req, res) => {
     }
 });
 
-router.get('/:id', async(req, res) => {
-    const r = await CharServices.getCharInfo(req.params.id)
+router.get('/sbid/:id', async(req, res) => {
+    const r = await CharServices.getCharInfo(req.params.id);
     console.log(res);
     return res.status(200).json(r);
 });
 
-router.get('', async(req, res) => {
-    const r = await CharServices.getCharByName(req.query.name)
+router.get('/search', async(req, res) => {
+    let r = null;
+    console.log(req.query.name);
+    if(typeof req.query.name !== 'undefined') {
+        r = await CharServices.getCharByName(req.query.name);
+    } else if (typeof req.query.age !== 'undefined') {
+        r = await CharServices.getCharByAge(req.query.age);
+    } else {
+        r = await CharServices.getCharByIdMovie(req.query.idMovie);
+    }
     console.log(res);
     return res.status(200).json(r);
 });
+
 
 export default router;

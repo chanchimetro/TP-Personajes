@@ -14,6 +14,7 @@ export default class CharactersServices {
         }
         return returnEntity;
     }
+
     static insert = async(character) => {
         let returnEntity = null;
         console.log(character);
@@ -31,6 +32,7 @@ export default class CharactersServices {
             .query('INSERT INTO Characters (Image, Name, Age, Weight, History) VALUES (@Image, @Name, @Age, @Weight, @History)')
         return returnEntity;
     }
+
     static update = async(character) => {
         let returnEntity = null;
         const {Id, Image, Name, Age, Weight, History} = character;
@@ -51,6 +53,7 @@ export default class CharactersServices {
         }
         return returnEntity;
     }
+
     static delete = async(id) => {
         let returnEntity = null;
         try{
@@ -63,30 +66,63 @@ export default class CharactersServices {
         }
         return returnEntity;
     }
+
     static getCharInfo = async(id) => {
         let returnEntity = null;
         try{
             let pool = await sql.connect(config);
             let result = await pool.request()
             .input('Id', sql.Int, id)
-                .query('SELECT C.*, MS.* FROM Characters C INNER JOIN [CharacterXMovies&Shows] X ON C.Id = X.fkCharacter INNER JOIN [Movies&Shows] MS ON MS.Id = X.fkMovieOrShow WHERE C.Id = 1');
+                .query('SELECT C.*, MS.* FROM Characters C INNER JOIN [CharacterXMovies&Shows] X ON C.Id = X.fkCharacter INNER JOIN [Movies&Shows] MS ON MS.Id = X.fkMovieOrShow WHERE C.Id = @id');
                 returnEntity = result.recordsets[0][0];
         }catch (error) {
             console.log(error);
         }
         return returnEntity;
     }
+
     static getCharByName = async(Name) => {
         let returnEntity = null;
         try{
             let pool = await sql.connect(config);
             let result = await pool.request()
-            .input('Name', sql.Int, Name)
+            .input('Name', sql.VarChar(50), Name)
                 .query('SELECT * FROM Characters WHERE Name = @Name');
                 returnEntity = result.recordsets[0][0];
         }catch (error) {
             console.log(error);
         }
+        console.log("BUSCaNDO NPOMBREEEEEEEEEEEEEEEEEEEEEEEE");
+        return returnEntity;
+    }
+
+    static getCharByAge = async(Age) => {
+        let returnEntity = null;
+        try{
+            let pool = await sql.connect(config);
+            let result = await pool.request()
+            .input('Age', sql.Int, Age)
+                .query('SELECT * FROM Characters WHERE Age = @Age');
+                returnEntity = result.recordsets[0][0];
+        }catch (error) {
+            console.log(error);
+        }
+        console.log("BUSCANDO ADEDADDDDDDDDDDDDDDDDDDDDDDDDDEFe");
+        return returnEntity;
+    }
+    
+    static getCharByIdMovie = async(IdMovie) => {
+        let returnEntity = null;
+        try{
+            let pool = await sql.connect(config);
+            let result = await pool.request()
+            .input('IdMovie', sql.Int, IdMovie)
+                .query('SELECT C.* FROM Characters C INNER JOIN [CharacterXMovies&Shows] X ON C.Id = X.fkCharacter INNER JOIN [Movies&Shows] MS ON MS.Id = X.fkMovieOrShow WHERE MS.Id = @IdMovie');
+                returnEntity = result.recordsets[0][0];
+        }catch (error) {
+            console.log(error);
+        }
+        console.log("BUSCANDO ADEDADDDDDDDDDDDDDDDDDDDDDDDDDEFe");
         return returnEntity;
     }
 }
