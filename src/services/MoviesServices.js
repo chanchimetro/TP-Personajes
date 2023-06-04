@@ -14,4 +14,17 @@ export default class MoviesServices {
         }
         return returnEntity;
     }
+
+    static getMovieInfo = async(id) => {
+        let returnEntity = null;
+        try{
+            let pool = await sql.connect(config);
+            let result = await pool.request()
+                .query('SELECT C.*, MS.* FROM Characters C INNER JOIN [CharacterXMovies&Shows] X ON C.Id = X.fkCharacter INNER JOIN [Movies&Shows] MS ON MS.Id = X.fkMovieOrShow WHERE MS.Id = @id');
+                returnEntity = result.recordsets[0][0];
+        }catch (error) {
+            console.log(error);
+        }
+        return returnEntity;
+    }
 }
