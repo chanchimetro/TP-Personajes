@@ -22,7 +22,7 @@ export default class MoviesServices {
             let result = await pool.request()
                 .input('Id', sql.Int, id)
                 .query('SELECT C.*, MS.* FROM Characters C INNER JOIN [CharacterXMovies&Shows] X ON C.Id = X.fkCharacter INNER JOIN [Movies&Shows] MS ON MS.Id = X.fkMovieOrShow WHERE MS.Id = @id');
-                returnEntity = result.recordsets[0][0];
+                returnEntity = result.recordsets[0];
         }catch (error) {
             console.log(error);
         }
@@ -76,7 +76,22 @@ export default class MoviesServices {
 
             returnEntity = request
             .input('Id', sql.Int, Id)
-                .query('UPDATE [Movies&Shows] SET Image = @Image, Title = @Title, ReleaseDate = @ReleaseDate, Rating = @Rating WHERE Id = @Id')
+                .query('DELETE FROM [Movies&Shows] WHERE Id = @Id')
+        } catch(error) {
+            console.log(error);
+        }
+        return returnEntity;
+    }
+
+    static searchForMovie = async(title, order) => {
+        let returnEntity = null;
+        let pool = await sql.connect(config);
+        try {
+            let result = await pool.request()
+                .input('Title', sql.VarChar, title)
+                .input('Order', sql.VarChar, order)
+                .query(`SELECT * FROM [Movies&Shows] WHERE Title = @Title ORDER BY Title ${order==='ASC' ? 'ASC' : 'DESC'}`);
+                returnEntity = result.recordsets[0];
         } catch(error) {
             console.log(error);
         }

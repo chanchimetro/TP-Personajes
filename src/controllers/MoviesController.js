@@ -8,7 +8,7 @@ router.get('', async(req, res) => {
     return res.status(200).json(movies);
 });
 
-router.get('/:id', async(req, res) => {
+router.get('/sbid/:id', async(req, res) => {
     const movie = await MoviesServices.getMovieInfo(req.params.id);
     console.log(res);
     return res.status(200).json(movie);
@@ -38,12 +38,23 @@ router.put('', async(req, res) => {
 
 router.delete('/:id', async(req, res) => {
     try {
-        let r = await MoviesServices.insert(req.params.id)
+        let r = await MoviesServices.delete(req.params.id)
         console.log(r)
         res.status(200).json({message: 'Movie/Show deleted!'});
     } catch(error) {
         console.log(error)
         res.status(500).json({error: 'delete failed!'});
+    }
+});
+
+router.get('/search', async(req, res) => {
+    try{
+        let r = await MoviesServices.searchForMovie(req.query.title, req.query.order);
+        console.log(res);
+        res.status(200).json(r);
+    } catch(error) {
+        console.log(error);
+        res.status(500).json({error: 'internal server error :('});
     }
 });
 
