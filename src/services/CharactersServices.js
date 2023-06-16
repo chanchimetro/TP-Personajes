@@ -56,11 +56,12 @@ export default class CharactersServices {
 
     static delete = async(id) => {
         let returnEntity = null;
+        let pool = await sql.connect(config);
         try{
             const request = new sql.Request(pool);
             returnEntity = request
             .input('Id', sql.Int, id)
-                .query('DELETE from Characters WHERE Id = @Id ');
+                .query('DELETE from [CharacterXMovies&Shows] WHERE fkCharacter = @Id; DELETE from Characters WHERE Id = @Id;');
         }catch (error) {
             console.log(error);
         }
